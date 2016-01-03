@@ -29,8 +29,6 @@ Calls `ShowActionProgress()` on the COM object. This is the function I use 99.9%
 
 There are other parameters here with “ShowActionProgress()”. With this function, those use the built-in variables “designed” to be used here. If you want to extend this function to allow those additional parameters, feel free. Personally, I don’t find them useful enough to include.
 
-###Show-TSActionProgress###
-
 ###Close-TSProgress###
 Calls `CloseProgressDialog()` on the COM object. Closes or “hides” the progress bar window. This will automatically reappear once the current step has completed, or if you call one of the “show” functions for the UI.
 
