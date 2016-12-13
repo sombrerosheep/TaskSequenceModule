@@ -349,15 +349,15 @@ function Show-TSProgress()
 
     .EXAMPLE
     Set's "Custom Step 1" at 30 percent complete
-    Show-TSActionProgress -CurrentAction "Running Custom Step 1" -Step 100 -MaxStep 300
+    Show-TSProgress -CurrentAction "Running Custom Step 1" -Step 100 -MaxStep 300
     
     .EXAMPLE
     Set's "Custom Step 1" at 50 percent complete
-    Show-TSActionProgress -CurrentAction "Running Custom Step 1" -Step 150 -MaxStep 300
+    Show-TSProgress -CurrentAction "Running Custom Step 1" -Step 150 -MaxStep 300
 
     .EXAMPLE
     Set's "Custom Step 1" at 100 percent complete
-    Show-TSActionProgress -CurrentAction "Running Custom Step 1" -Step 300 -MaxStep 300
+    Show-TSProgress -CurrentAction "Running Custom Step 1" -Step 300 -MaxStep 300
     #>
     param(
         [Parameter(Mandatory=$true)]
