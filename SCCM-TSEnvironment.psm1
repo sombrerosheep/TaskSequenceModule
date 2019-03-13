@@ -1,4 +1,4 @@
-﻿$Script:TaskSequenceEnvironment = $null
+$Script:TaskSequenceEnvironment = $null
 $Script:TaskSequenceProgressUi = $null
 
 
@@ -415,6 +415,7 @@ function Show-TSErrorDialog()
      - ErrorCode: Long
      - TimeoutInSeconds: Long
      - ForceReboot: System.Boolean
+     - TSStepName: String
 
     .OUTPUTS
     None
@@ -427,6 +428,10 @@ function Show-TSErrorDialog()
     Sets an Error and forces a reboot
     Show-TSErrorDialog -OrganizationName "My Organization" -CustomTitle "An Error occured during the things" -ErrorMessage "He's dead Jim!" -ErrorCode 123456 -TimeoutInSeconds 90 -ForceReboot $true
 
+    .EXAMPLE
+    Adds TSStepName which is required for SCCM 1901 TP and newer
+    Show-TSErrorDialog -OrganizationName "My Organization" -CustomTitle "An Error occured during the things" -ErrorMessage "That thing you tried...it didnt work" -ErrorCode 123456 -TimeoutInSeconds 90 -ForceReboot $false -TSStepName "My Step Name"
+    
     #>
     param(
         [Parameter(Mandatory=$true)]
@@ -440,19 +445,24 @@ function Show-TSErrorDialog()
         [Parameter(Mandatory=$true)]
         [long] $TimeoutInSeconds,
         [Parameter(Mandatory=$true)]
-        [bool] $ForceReboot
+        [bool] $ForceReboot,
+        [Parameter()] #Required for SCCM 1901 Tech Preview and newer clients
+        [string] $TSStepName
     )
 
     Confirm-TSProgressUISetup
     Confirm-TSEnvironmentSetup
 
-    if ($ForceReboot)
-    {
-        $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, 1)
+    [int]$Reboot = Switch($ForceReboot) {
+        $True {1}
+        $False {0}
     }
-    else
-    {
-        $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, 0)
+
+    If([string]::IsNullOrEmpty($TSStepName)) {
+        $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, $Reboot)
+    }
+    Else {
+        $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, $Reboot, $TSStepName)
     }
 }
 
