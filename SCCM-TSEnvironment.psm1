@@ -458,10 +458,10 @@ function Show-TSErrorDialog()
         $False {0}
     }
 
-    If([string]::IsNullOrEmpty($TSStepName)) {
+    if([string]::IsNullOrEmpty($TSStepName)) {
         $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, $Reboot)
     }
-    Else {
+    else {
         $Script:TaskSequenceProgressUi.ShowErrorDialog($OrganizationName, $Script:TaskSequenceEnvironment.Value("_SMSTSPackageName"), $CustomTitle, $ErrorMessage, $ErrorCode, $TimeoutInSeconds, $Reboot, $TSStepName)
     }
 }
